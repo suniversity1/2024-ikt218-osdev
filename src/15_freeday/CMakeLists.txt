@@ -62,6 +62,7 @@ add_executable(uiaos-kernel
 	src/gdt_asm.asm
 	src/gdt.c
 	include/libc/stdio.h
+	include/libc/stdio.c
     src/kernel.c
 	src/kernel.cpp
 	
