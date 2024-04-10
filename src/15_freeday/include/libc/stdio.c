@@ -1,4 +1,5 @@
 #include <libc/stdio.h> 
+#include <libc/stdarg.h>
 
 #define VIDEO_MEMORY 0xB8000
 #define SCREEN_WIDTH 80
@@ -80,4 +81,73 @@ void write_string(int colour, const char *string)
     {
         write_char(colour, *string++);
     }
+}
+
+char * itoa( int value, char * str, int base )
+{
+    char * rc;
+    char * ptr;
+    char * low;
+    // Check for supported base.
+    if ( base < 2 || base > 36 )
+    {
+        *str = '\0';
+        return str;
+    }
+    rc = ptr = str;
+    // Set '-' for negative decimals.
+    if ( value < 0 && base == 10 )
+    {
+        *ptr++ = '-';
+    }
+    // Remember where the numbers start.
+    low = ptr;
+    // The actual conversion.
+    do
+    {
+        // Modulo is negative for negative value. This trick makes abs() unnecessary.
+        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+        value /= base;
+    } while ( value );
+    // Terminating the string.
+    *ptr-- = '\0';
+    // Invert the numbers.
+    while ( low < ptr )
+    {
+        char tmp = *low;
+        *low++ = *ptr;
+        *ptr-- = tmp;
+    }
+    return rc;
+}
+
+void write_int(int value) {
+    char buffer[12]; 
+    itoa(value, buffer, 10);
+    write_string(0x0F, buffer);
+}
+
+
+void my_printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    while (*format != '\0') {
+        if (*format == '%') {
+            format++;
+            if (*format == 'd') {
+                int i = va_arg(args, int);
+                 write_int(i);  // You need to implement this function
+            } else if (*format == 's') {
+                char *s = va_arg(args, char *);
+                write_string(0x0F,s);  // You need to implement this function
+            }
+            // Add more format specifiers as needed
+        } else {
+            write_char(0x0F, *format);
+        }
+        format++;
+    }
+
+    va_end(args);
 }

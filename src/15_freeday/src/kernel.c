@@ -18,11 +18,9 @@ int kernel_main();
 
 int main(uint32_t magic, struct multiboot_info* mb_info_addr) {
 
-    
+    char* World = "World!";
     init_gdt();
-    write_string( 0x0F, "Hello, World!" );
-    write_char( 0x0F, '\n' );
-    write_string( 0x0F, "This is a new line." );
+    my_printf("Hello,  %s\n%d", World, 50+75);
     // Call cpp kernel_main (defined in kernel.cpp)
     return kernel_main();
 }
