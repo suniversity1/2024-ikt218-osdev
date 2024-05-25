@@ -1,16 +1,5 @@
 #pragma once
 
-
-void scroll();
-
-void update_cursor();
-
-void write_char(int colour, char character);
-
-void write_string(int colour, const char *string);
-
-char * itoa( int value, char * str, int base );
-
-void write_int(int value);
-
-void my_printf(const char *format, ...);
+int putchar(int ic);
+bool print(const char* data, size_t length);
+int printf(const char* __restrict__ format, ...);
